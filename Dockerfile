@@ -2,15 +2,15 @@ FROM alpine:latest as libgmpris-fetcher
 RUN apk add --no-cache wget
 ENV LIBGMPRIS_VERSION="2.2.1-10"
 ENV LIBGMPRIS="libgmpris_${LIBGMPRIS_VERSION}_amd64.deb"
-RUN wget -O /tmp/libgmpris.deb "https://www.sonarnerd.net/src/focal/${LIBGMPRIS}"
+RUN wget -O /tmp/libgmpris.deb "https://www.sonarnerd.net/src/jammy/${LIBGMPRIS}"
 ################################################################################
 FROM alpine:latest as hqplayerd-fetcher
 RUN apk add --no-cache wget
-ENV HQPLAYERD_VERSION="hqplayerd_5.2.0-6avx2"
+ENV HQPLAYERD_VERSION="hqplayerd_5.41-11avx2"
 ENV HQPLAYERD="hqplayerd_${HQPLAYERD_VERSION}_amd64.deb"
-RUN wget -O /tmp/hqplayerd.deb "https://www.signalyst.eu/bins/hqplayerd/focal/${HQPLAYERD}"
+RUN wget -O /tmp/hqplayerd.deb "https://www.signalyst.eu/bins/hqplayerd/jammy/${HQPLAYERD}"
 ################################################################################
-FROM rocm/dev-ubuntu-20.04
+FROM rocm/dev-ubuntu-22.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y && apt-get install -y \
@@ -37,5 +37,5 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 # run
 ENV LD_LIBRARY_PATH="/opt/rocm-4.5.0/hip/lib/:${LD_LIBRARY_PATH}"
 RUN hqplayerd -s hqplayer hqplayer
-ENV HOME="/mnt/user/appdata/hqplaerd/home"
+ENV HOME="/mnt/user/appdata/hqplayerd/home"
 ENTRYPOINT ["/usr/bin/hqplayerd"]
